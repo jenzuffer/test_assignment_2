@@ -1,14 +1,19 @@
+import java.util.concurrent.Callable;
+
 public class Game {
     private int rolls[] = new int[21];
     private int currentroll = 0;
 
     public void rolls(int pins) {
-        if (currentroll < rolls.length && pins > 0) {
+        if (pins < 0 || pins > 10){
+            pins = 1;
+        }
+        if (currentroll < rolls.length) {
             rolls[currentroll++] = pins;
         }
     }
 
-    public int score() {
+    public int score(){
         int score = 0;
         int frameIndex = 0;
         for (int frame = 0; frame < 10; frame++) {
@@ -44,5 +49,10 @@ public class Game {
 
     private boolean isspare(int frameindex) {
         return rolls[frameindex] + rolls[frameindex + 1] == 10;
+    }
+
+    public Callable<Integer> rollsThreaded(int iterator) {
+        rolls(iterator);
+        return this::score;
     }
 }

@@ -1,11 +1,20 @@
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import java.util.concurrent.Callable;
+
 public class TestBowlingGame {
     private Game game = new Game();
+
+    @BeforeEach
+    public void createNewGameObject() {
+        game = new Game();
+    }
 
     @Test
     public void testconstructor() {
@@ -69,13 +78,15 @@ public class TestBowlingGame {
     @ValueSource(ints = {Integer.MAX_VALUE, Integer.MIN_VALUE})
     public void testIntegerMaxMin(int input) {
         try {
-            for (int iterator = 0; iterator < 50; iterator++){
+            System.out.println("input: " + input);
+            for (int iterator = 0; iterator < 50; iterator++) {
                 game.rolls(input);
                 game.score();
             }
             System.out.println("testIntegerMaxMin: " + game.score());
+            Assertions.assertTrue(game.score() >= 0);
             assert true;
-        } catch (Exception e){
+        } catch (Exception e) {
             assert false;
         }
 
@@ -96,5 +107,23 @@ public class TestBowlingGame {
         }
     }
 
+    @Test
+    public void testSimpleThreadSafetyOfProgram() {
+        int max_score = 210;
+        for (int iterator = -50; iterator < 50; iterator++) {
+            int finalIterator = iterator;
+            try {
+                Callable<Integer> threadScore = game.rollsThreaded(iterator);
+                {
+                    Integer calledScore = threadScore.call();
+                    System.out.println("calledScore: " + calledScore);
+                    Assertions.assertTrue(calledScore <= max_score);
+                    Assertions.assertTrue(calledScore > 0);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
 }
