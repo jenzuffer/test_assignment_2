@@ -109,7 +109,7 @@ public class TestBowlingGame {
 
     @Test
     public void testSimpleThreadSafetyOfProgram() {
-        int max_score = 210;
+        int max_score = 300;
         for (int iterator = -50; iterator < 50; iterator++) {
             int finalIterator = iterator;
             try {

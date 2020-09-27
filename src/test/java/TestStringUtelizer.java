@@ -22,7 +22,7 @@ public class TestStringUtelizer {
 
     @ParameterizedTest
     @NullAndEmptySource
-    @ValueSource(strings = {"  ", "\t", "\n"})
+    @ValueSource(strings = {"  ", "\t", "\n", "\u0001", "\u0004", "\b"})
     public void Test_invalid_input(String input){
         //arrange
         String expected_result = "invalid input";
@@ -33,6 +33,7 @@ public class TestStringUtelizer {
         Assertions.assertEquals(su.uppercase_string(), expected_result);
         Assertions.assertEquals(su.lowercase_string(), expected_result);
     }
+
 
     @ParameterizedTest
     @CsvSource({"ABC,CBA", "tEst,tsEt", "Java,avaJ"})
@@ -46,7 +47,7 @@ public class TestStringUtelizer {
 
     @ParameterizedTest
     @CsvSource({"abc,ABC", "tEst,TEST", "Java,JAVA"})
-    public void test_upper_case_input(String input, String expected){
+    public void Test_upper_case_input(String input, String expected){
         //arrange
         //act
         StringUtelizer su = new StringUtelizer(input);
@@ -56,7 +57,7 @@ public class TestStringUtelizer {
 
     @ParameterizedTest
     @CsvSource({"ABC,abc", "TEST,test", "JAVA,java"})
-    public void test_lower_case_input(String input, String expected){
+    public void Test_lower_case_input(String input, String expected){
         //arrange
         //act
         StringUtelizer su = new StringUtelizer(input);
